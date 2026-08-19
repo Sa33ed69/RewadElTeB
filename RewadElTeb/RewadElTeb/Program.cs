@@ -1,7 +1,7 @@
+using Application.Mappings;
 using Infrastructure.DependencyInjection;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-
 namespace RewadElTeb
 {
     public class Program
