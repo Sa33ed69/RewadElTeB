@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RewadElTeb.Controllers
@@ -16,6 +17,7 @@ namespace RewadElTeb.Controllers
         }
 
         // POST: api/dashboard/doctors
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(
             [FromForm] CreateDoctorDto dto)
@@ -29,6 +31,7 @@ namespace RewadElTeb.Controllers
         }
 
         // PUT: api/dashboard/doctors/{id}
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(
             int id,
@@ -43,6 +46,7 @@ namespace RewadElTeb.Controllers
         }
 
         // DELETE: api/dashboard/doctors/{id}
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

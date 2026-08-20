@@ -1,4 +1,6 @@
 ﻿using Domain.Entities;
+using Infrastructure.Persistence.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Context
 {
-    public class AppDbContext :DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Department> Departments { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
