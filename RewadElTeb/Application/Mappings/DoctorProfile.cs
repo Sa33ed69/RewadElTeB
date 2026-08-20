@@ -1,11 +1,6 @@
 ﻿using Application.DTOs;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Mappings
 {
@@ -13,11 +8,27 @@ namespace Application.Mappings
     {
         public DoctorProfile()
         {
-            CreateMap<CreateDoctorDto, Doctor>();
+            // Create
+            CreateMap<CreateDoctorDto, Doctor>()
+                .ForMember(
+                    dest => dest.ImageUrl,
+                    opt => opt.Ignore());
+
+            // Get Doctor
+            CreateMap<Doctor, DoctorDto>()
+                .ForMember(
+                    dest => dest.Status,
+                    opt => opt.MapFrom(src => src.Status.ToString())
+                )
+                .ForMember(
+                    dest => dest.DepartmentName,
+                    opt => opt.MapFrom(src => src.Department.Name)
+                );
+
             CreateMap<UpdateDoctorDto, Doctor>()
-             .ForMember(
-        dest => dest.Status,
-        opt => opt.MapFrom(src => src.Status.ToString()));
+          .ForMember(
+              dest => dest.ImageUrl,
+              opt => opt.Ignore());
         }
     }
 }

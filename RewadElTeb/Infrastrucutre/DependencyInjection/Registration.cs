@@ -2,6 +2,7 @@
 using Application.IRepositories;
 using Application.Mappings;
 using Application.Services;
+using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ namespace Infrastructure.DependencyInjection
                 cfg.AddProfile<DoctorProfile>();
                
             });
-
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IDoctorService, DoctorService>();
             return services;
         }

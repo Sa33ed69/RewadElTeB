@@ -15,8 +15,10 @@ namespace RewadElTeb.Controllers
             _doctorService = doctorService;
         }
 
+        // POST: api/dashboard/doctors
         [HttpPost]
-        public async Task<IActionResult> Create(CreateDoctorDto dto)
+        public async Task<IActionResult> Create(
+            [FromForm] CreateDoctorDto dto)
         {
             var result = await _doctorService.CreateAsync(dto);
 
@@ -25,8 +27,12 @@ namespace RewadElTeb.Controllers
 
             return Ok(result.Message);
         }
+
+        // PUT: api/dashboard/doctors/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id,UpdateDoctorDto dto)
+        public async Task<IActionResult> Update(
+            int id,
+            [FromForm] UpdateDoctorDto dto)
         {
             var result = await _doctorService.UpdateAsync(id, dto);
 
@@ -34,6 +40,40 @@ namespace RewadElTeb.Controllers
                 return BadRequest(result.Message);
 
             return Ok(result.Message);
+        }
+
+        // DELETE: api/dashboard/doctors/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _doctorService.DeleteAsync(id);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result.Message);
+        }
+
+        // GET: api/dashboard/doctors
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var doctors = await _doctorService.GetAllAsync();
+
+            return Ok(doctors);
+        }
+
+        // GET: api/dashboard/doctors/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var doctor = await _doctorService.GetByIdAsync(id);
+
+            if (doctor == null)
+                return NotFound(
+                    $"Doctor with ID {id} does not exist.");
+
+            return Ok(doctor);
         }
     }
 }

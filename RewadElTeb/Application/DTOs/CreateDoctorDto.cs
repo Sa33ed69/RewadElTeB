@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Application.DTOs
     {
         [Required]
         public string FullName { get; set; } = null!;
-        public string? ImageUrl { get; set; }
+        public IFormFile? Image { get; set; }
 
         public string Specialization { get; set; } = null!;
         public string? Biography { get; set; }

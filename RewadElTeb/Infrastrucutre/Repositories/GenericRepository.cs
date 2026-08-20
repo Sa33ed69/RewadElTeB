@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 
 namespace Infrastructure.Repositories
@@ -46,6 +47,29 @@ namespace Infrastructure.Repositories
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
 
+        }
+
+        public async Task<T?> GetByIdAsync(int id,params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+        }
+
+        public async Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.ToListAsync();
         }
     }
 }

@@ -12,6 +12,8 @@ namespace Application.Interfaces
     {
         Task<Result> CreateAsync(CreateDoctorDto dto);
         Task<Result> UpdateAsync(int id, UpdateDoctorDto dto);
-
+        Task<Result> DeleteAsync(int id);
+        Task<IEnumerable<DoctorDto>> GetAllAsync();
+        Task<DoctorDto?> GetByIdAsync(int id);
     }
 }

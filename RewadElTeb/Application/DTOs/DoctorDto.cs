@@ -1,20 +1,20 @@
-﻿using Domain.Enums;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.DTOs
 {
-    public class UpdateDoctorDto
+    public class DoctorDto
     {
         public string FullName { get; set; } = null!;
-        public IFormFile? Image { get; set; }
+        public string? ImageUrl { get; set; }
         public string Specialization { get; set; } = null!;
         public string? Biography { get; set; }
-        public int DepartmentId { get; set; }
-        public DoctorStatus Status { get; set; }    
+        public string DepartmentName { get; set; } = null!;
+        public string Status { get; set; } = null!;
+
     }
 }
