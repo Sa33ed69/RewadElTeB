@@ -9,7 +9,8 @@ namespace Application.Interfaces
 {
     public interface IImageService
     {
-        Task<string> SaveImageAsync(IFormFile image);
-        Task DeleteImageAsync(string imageUrl);
+        Task<string> SaveImageAsync(IFormFile image,string folder);
+
+        Task DeleteImageAsync(string imageUrl,string folder);
     }
 }

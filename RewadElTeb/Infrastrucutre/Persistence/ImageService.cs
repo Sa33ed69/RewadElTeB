@@ -1,9 +1,6 @@
 ﻿using Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
 
 namespace Infrastructure.Persistence
 {
@@ -16,66 +13,66 @@ namespace Infrastructure.Persistence
             _environment = environment;
         }
 
-        public async Task<string> SaveImageAsync(IFormFile image)
+        public async Task<string> SaveImageAsync(
+            IFormFile image,
+            string folder)
         {
-            if (image == null || image.Length == 0)
-                throw new ArgumentException("Invalid image.");
-
-            const long maxFileSize = 5 * 1024 * 1024;
-
-            if (image.Length > maxFileSize)
-                throw new ArgumentException(
-                    "Image size cannot exceed 5 MB.");
+            // wwwroot/images/doctors
+            // أو
+            // wwwroot/images/Departments
 
             var folderPath = Path.Combine(
                 _environment.WebRootPath,
                 "images",
-                "doctors");
+                folder);
 
+            // لو الفولدر مش موجود هيعمله
             Directory.CreateDirectory(folderPath);
 
-            var fileName = $"{Guid.NewGuid()}.jpg";
+            // استخراج امتداد الصورة
+            var extension =
+                Path.GetExtension(image.FileName);
 
-            var filePath = Path.Combine(
-                folderPath,
-                fileName);
+            // اسم Unique للصورة
+            var fileName =
+                $"{Guid.NewGuid()}{extension}";
 
-            using var inputStream = image.OpenReadStream();
+            // المسار الكامل للصورة
+            var filePath =
+                Path.Combine(
+                    folderPath,
+                    fileName);
 
-            using var imageSharp =
-                await Image.LoadAsync(inputStream);
+            // إنشاء الملف ونسخ الصورة داخله
+            using var stream =
+                new FileStream(
+                    filePath,
+                    FileMode.Create);
 
-            imageSharp.Mutate(x =>
-                x.Resize(new ResizeOptions
-                {
-                    Mode = ResizeMode.Max,
-                    Size = new Size(1200, 1200)
-                }));
+            await image.CopyToAsync(stream);
 
-            var encoder = new JpegEncoder
-            {
-                Quality = 80
-            };
-
-            await imageSharp.SaveAsync(
-                filePath,
-                encoder);
-
-            return $"/images/doctors/{fileName}";
+            // القيمة اللي هتتحفظ في Database
+            return $"/images/{folder}/{fileName}";
         }
 
-        public Task DeleteImageAsync(string imageUrl)
+        public Task DeleteImageAsync(
+            string imageUrl,
+            string folder)
         {
-            if (string.IsNullOrWhiteSpace(imageUrl))
+            if (string.IsNullOrEmpty(imageUrl))
                 return Task.CompletedTask;
 
-            var fileName = Path.GetFileName(imageUrl);
+            // نجيب اسم الملف فقط
+            var fileName =
+                Path.GetFileName(imageUrl);
 
-            var filePath = Path.Combine(
-                _environment.WebRootPath,
-                "images",
-                "doctors",
-                fileName);
+            // نبني المسار الكامل
+            var filePath =
+                Path.Combine(
+                    _environment.WebRootPath,
+                    "images",
+                    folder,
+                    fileName);
 
             if (File.Exists(filePath))
             {

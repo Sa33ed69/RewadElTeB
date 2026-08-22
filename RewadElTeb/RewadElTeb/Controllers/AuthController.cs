@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RewadElTeb.Controllers
 {
-
     [ApiController]
     [Route("api/auth")]
     public class AuthController : ControllerBase
@@ -18,10 +17,11 @@ namespace RewadElTeb.Controllers
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(
-            LoginDto dto)
+            LoginDto dto,
+            CancellationToken cancellationToken)
         {
             var result = await _authService
-                .LoginAsync(dto);
+                .LoginAsync(dto, cancellationToken);
 
             if (!result.IsSuccess)
                 return Unauthorized(result.Message);

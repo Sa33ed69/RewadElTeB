@@ -29,8 +29,11 @@ namespace Infrastructure.Persistence.AuthService
         }
 
         public async Task<Result<string>> LoginAsync(
-           LoginDto dto)
+            LoginDto dto,
+            CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var user = await _userManager
                 .FindByEmailAsync(dto.Email);
 
@@ -39,6 +42,8 @@ namespace Infrastructure.Persistence.AuthService
                 return Result<string>.Failure(
                     "Invalid email or password.");
             }
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             var result = await _signInManager
                 .CheckPasswordSignInAsync(
@@ -51,6 +56,8 @@ namespace Infrastructure.Persistence.AuthService
                 return Result<string>.Failure(
                     "Invalid email or password.");
             }
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             var roles = await _userManager
                 .GetRolesAsync(user);

@@ -20,9 +20,12 @@ namespace RewadElTeb.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(
-            [FromForm] CreateDoctorDto dto)
+            [FromForm] CreateDoctorDto dto,
+            CancellationToken cancellationToken)
         {
-            var result = await _doctorService.CreateAsync(dto);
+            var result = await _doctorService.CreateAsync(
+                dto,
+                cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Message);
@@ -35,9 +38,13 @@ namespace RewadElTeb.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(
             int id,
-            [FromForm] UpdateDoctorDto dto)
+            [FromForm] UpdateDoctorDto dto,
+            CancellationToken cancellationToken)
         {
-            var result = await _doctorService.UpdateAsync(id, dto);
+            var result = await _doctorService.UpdateAsync(
+                id,
+                dto,
+                cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Message);
@@ -48,9 +55,13 @@ namespace RewadElTeb.Controllers
         // DELETE: api/dashboard/doctors/{id}
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(
+            int id,
+            CancellationToken cancellationToken)
         {
-            var result = await _doctorService.DeleteAsync(id);
+            var result = await _doctorService.DeleteAsync(
+                id,
+                cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Message);
@@ -60,18 +71,24 @@ namespace RewadElTeb.Controllers
 
         // GET: api/dashboard/doctors
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(
+            CancellationToken cancellationToken)
         {
-            var doctors = await _doctorService.GetAllAsync();
+            var doctors = await _doctorService.GetAllAsync(
+                cancellationToken);
 
             return Ok(doctors);
         }
 
         // GET: api/dashboard/doctors/{id}
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(
+            int id,
+            CancellationToken cancellationToken)
         {
-            var doctor = await _doctorService.GetByIdAsync(id);
+            var doctor = await _doctorService.GetByIdAsync(
+                id,
+                cancellationToken);
 
             if (doctor == null)
                 return NotFound(

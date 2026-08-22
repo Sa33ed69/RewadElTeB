@@ -37,6 +37,7 @@ namespace Infrastructure.DependencyInjection
             services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<DoctorProfile>();
+                cfg.AddProfile<DepartmentProfile>();
             });
 
             // Identity
@@ -49,6 +50,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
 
             return services;
         }

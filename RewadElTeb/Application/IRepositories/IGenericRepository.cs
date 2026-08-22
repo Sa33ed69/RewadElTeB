@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace Application.IRepositories
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T>
+        where T : class
     {
-        Task<T?> GetByIdAsync(int id);
-        Task<T?> GetByIdAsync(int id,params Expression<Func<T, object>>[] includes);
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
+        Task<T?> GetByIdAsync(int id,CancellationToken cancellationToken = default);
 
-        Task AddAsync(T entity);
+        Task<T?> GetByIdAsync(int id,Expression<Func<T, object>> include,CancellationToken cancellationToken = default);
 
-        Task UpdateAsync(T entity);
+        Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(T entity);
+        Task<IEnumerable<T>> GetAllWithIncludesAsync(Expression<Func<T, object>> include,CancellationToken cancellationToken = default);
+
+        Task AddAsync(T entity,CancellationToken cancellationToken = default);
+
+        Task UpdateAsync(T entity,CancellationToken cancellationToken = default);
+
+        Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
     }
 }
