@@ -9,6 +9,7 @@ namespace Application.DTOs
 {
     public class DoctorDto
     {
+        public int Id { get; set; }
         public string FullName { get; set; } = null!;
         public string? ImageUrl { get; set; }
         public string Specialization { get; set; } = null!;
