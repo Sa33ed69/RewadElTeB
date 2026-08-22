@@ -56,7 +56,16 @@ namespace RewadElTeb
                                    builder.Configuration["Jwt:Key"]!))
                     };
             });
-
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
             var app = builder.Build();
 
             // Database + Identity Seeding
@@ -88,6 +97,7 @@ namespace RewadElTeb
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+            app.UseCors("AllowAll");
 
             // Authentication must come before Authorization
             app.UseAuthentication();
