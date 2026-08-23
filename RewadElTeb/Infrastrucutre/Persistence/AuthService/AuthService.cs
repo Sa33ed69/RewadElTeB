@@ -69,5 +69,72 @@ namespace Infrastructure.Persistence.AuthService
 
             return Result<string>.Success(token);
         }
+
+        public async Task<Result> CreateAdminAsync(
+    CreateAdminDto dto,
+    CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var existingUser = await _userManager
+                .FindByEmailAsync(dto.Email);
+
+            if (existingUser != null)
+            {
+                return Result.Failure(
+                    "An account with this email already exists.");
+            }
+
+            if (dto.Password != dto.ConfirmPassword)
+            {
+                return Result.Failure(
+                    "Password and Confirm Password do not match.");
+            }
+
+            try
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = dto.Email,
+                    Email = dto.Email
+                };
+
+                var createResult = await _userManager
+                    .CreateAsync(user, dto.Password);
+
+                if (!createResult.Succeeded)
+                {
+                    var errors = string.Join(
+                        ", ",
+                        createResult.Errors.Select(e => e.Description));
+
+                    return Result.Failure(errors);
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var roleResult = await _userManager
+                    .AddToRoleAsync(user, "Admin");
+
+                if (!roleResult.Succeeded)
+                {
+                    var errors = string.Join(
+                        ", ",
+                        roleResult.Errors.Select(e => e.Description));
+
+                    await _userManager.DeleteAsync(user);
+
+                    return Result.Failure(errors);
+                }
+
+                return Result.Success(
+                    "Admin account created successfully.");
+            }
+            catch (Exception)
+            {
+                return Result.Failure(
+                    "Failed to create admin account.");
+            }
+        }
     }
 }

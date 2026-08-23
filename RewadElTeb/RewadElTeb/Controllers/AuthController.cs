@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.IdentityDtos;
 using Application.Interfaces.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RewadElTeb.Controllers
@@ -30,6 +31,21 @@ namespace RewadElTeb.Controllers
             {
                 token = result.Data
             });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("create-admin")]
+        public async Task<IActionResult> CreateAdmin(
+        CreateAdminDto dto,
+        CancellationToken cancellationToken)
+        {
+            var result = await _authService
+                .CreateAdminAsync(dto, cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result.Message);
         }
     }
 }
