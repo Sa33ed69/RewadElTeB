@@ -39,6 +39,7 @@ namespace Infrastructure.DependencyInjection
                 cfg.AddProfile<DoctorProfile>();
                 cfg.AddProfile<DepartmentProfile>();
                 cfg.AddProfile<StaffProfile>();
+                cfg.AddProfile<ContractProfile>();
 
             });
 
@@ -54,6 +55,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IDoctorService, DoctorService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IStaffService, StaffService>();
+            services.AddScoped<IContractService, ContractService>();
 
 
             return services;
