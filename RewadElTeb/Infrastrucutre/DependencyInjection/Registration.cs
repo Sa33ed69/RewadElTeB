@@ -38,6 +38,8 @@ namespace Infrastructure.DependencyInjection
             {
                 cfg.AddProfile<DoctorProfile>();
                 cfg.AddProfile<DepartmentProfile>();
+                cfg.AddProfile<StaffProfile>();
+
             });
 
             // Identity
@@ -51,6 +53,8 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IDoctorService, DoctorService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<IStaffService, StaffService>();
+
 
             return services;
         }
