@@ -113,5 +113,12 @@ namespace Infrastructure.Repositories
 
             return await query.ToListAsync(cancellationToken);
         }
+        public async Task<bool> AnyAsync(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<T>()
+                .AnyAsync(predicate, cancellationToken);
+        }
     }
 }

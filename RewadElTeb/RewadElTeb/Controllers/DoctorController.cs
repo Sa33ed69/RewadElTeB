@@ -36,10 +36,7 @@ namespace RewadElTeb.Controllers
         // PUT: api/dashboard/doctors/{id}
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(
-            int id,
-            [FromForm] UpdateDoctorDto dto,
-            CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id,[FromForm] UpdateDoctorDto dto, CancellationToken cancellationToken)
         {
             var result = await _doctorService.UpdateAsync(
                 id,
