@@ -133,6 +133,18 @@ namespace Application.Services
             return _mapper.Map<DoctorDto>(doctor);
         }
 
+        public async Task<Result<IEnumerable<DoctorStatusDto>>> GetStatusAsync()
+        {
+            var statuses = Enum.GetValues<DoctorStatus>()
+          .Select(status => new DoctorStatusDto
+          {
+              Id = (int)status,
+              Name = status.ToString()
+          });
+
+            return Result<IEnumerable<DoctorStatusDto>>.Success(statuses);
+        }
+
         public async Task<Result> UpdateAsync(
             int id,
             UpdateDoctorDto dto,
@@ -199,5 +211,44 @@ namespace Application.Services
                     "Failed to update doctor.");
             }
         }
+        public async Task<Result> UpdateStatusAsync(
+          int id,
+          DoctorStatus status,
+          CancellationToken cancellationToken = default)
+        {
+            var doctor = await _doctorRepository.GetByIdAsync(
+                id,
+                cancellationToken);
+
+            if (doctor == null)
+            {
+                return Result.Failure(
+                    $"Doctor with ID {id} does not exist.");
+            }
+
+            if (!Enum.IsDefined(typeof(DoctorStatus), status))
+            {
+                return Result.Failure(
+                    $"Invalid doctor status: {(int)status}.");
+            }
+
+            try
+            {
+                doctor.Status = status;
+
+                await _doctorRepository.UpdateAsync(
+                    doctor,
+                    cancellationToken);
+
+                return Result.Success(
+                    "Doctor status updated successfully.");
+            }
+            catch (Exception)
+            {
+                return Result.Failure(
+                    "Failed to update doctor status.");
+            }
+        }
+
     }
 }

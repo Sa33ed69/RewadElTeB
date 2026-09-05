@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.ResultPattern;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +30,7 @@ namespace Application.Interfaces
         Task<DoctorDto?> GetByIdAsync(
             int id,
             CancellationToken cancellationToken = default);
+        Task<Result<IEnumerable<DoctorStatusDto>>> GetStatusAsync();
+        Task<Result> UpdateStatusAsync(int id,DoctorStatus status,CancellationToken cancellationToken = default);
     }
 }

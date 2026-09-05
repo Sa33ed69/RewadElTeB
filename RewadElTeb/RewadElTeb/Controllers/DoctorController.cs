@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -92,6 +93,35 @@ namespace RewadElTeb.Controllers
                     $"Doctor with ID {id} does not exist.");
 
             return Ok(doctor);
+        }
+
+        [HttpGet("status")]
+        public async Task<IActionResult> GetStatus()
+        {
+            var result = await _doctorService.GetStatusAsync();
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result.Data);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(
+            int id,
+            DoctorStatus status,
+            CancellationToken cancellationToken)
+        {
+            var result = await _doctorService.UpdateStatusAsync(
+                id,
+                status,
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result.Message);
         }
     }
 }
