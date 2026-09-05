@@ -249,6 +249,68 @@ namespace Application.Services
                     "Failed to update doctor status.");
             }
         }
+        public async Task<Result<IEnumerable<DayOfWeekDto>>> GetAllDaysAsync()
+        {
+            var days = Enum.GetValues<DayOfWeek>()
+                .Select(day => new DayOfWeekDto
+                {
+                    Id = (int)day,
+                    Name = day.ToString()
+                });
 
+            return Result<IEnumerable<DayOfWeekDto>>.Success(days);
+        }
+        public async Task<Result> UpdateWorkingDaysAsync(int id, UpdateDoctorWorkingDaysDto dto, CancellationToken cancellationToken = default)
+
+        {
+            var doctor = await _doctorRepository.GetByIdAsync(
+                id,
+                cancellationToken);
+
+            if (doctor == null)
+            {
+                return Result.Failure(
+                    $"Doctor with ID {id} does not exist.");
+            }
+
+            // Validate FromDay
+            if (!Enum.IsDefined(dto.FromDay))
+            {
+                return Result.Failure(
+                    $"Invalid start working day: {dto.FromDay}.");
+            }
+
+            // Validate ToDay
+            if (!Enum.IsDefined(dto.ToDay))
+            {
+                return Result.Failure(
+                    $"Invalid end working day: {dto.ToDay}.");
+            }
+
+            // FromDay must be before ToDay
+            if (dto.FromDay >= dto.ToDay)
+            {
+                return Result.Failure(
+                    "The start working day must be before the end working day.");
+            }
+
+            try
+            {
+                doctor.WorkingDaysFrom = dto.FromDay;
+                doctor.WorkingDaysTo = dto.ToDay;
+
+                await _doctorRepository.UpdateAsync(
+                    doctor,
+                    cancellationToken);
+
+                return Result.Success(
+                    "Doctor working days updated successfully.");
+            }
+            catch (Exception)
+            {
+                return Result.Failure(
+                    "Failed to update doctor working days.");
+            }
+        }
     }
 }

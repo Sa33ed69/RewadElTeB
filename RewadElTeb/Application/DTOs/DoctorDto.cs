@@ -16,6 +16,8 @@ namespace Application.DTOs
         public string? Biography { get; set; }
         public string DepartmentName { get; set; } = null!;
         public string Status { get; set; } = null!;
+        public string WorkingDaysFrom { get; set; } = string.Empty;
+        public string WorkingDaysTo { get; set; } = string.Empty;
 
     }
 }

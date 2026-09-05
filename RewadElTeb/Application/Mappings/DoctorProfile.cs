@@ -16,14 +16,22 @@ namespace Application.Mappings
 
             // Get Doctor
             CreateMap<Doctor, DoctorDto>()
-                .ForMember(
-                    dest => dest.Status,
-                    opt => opt.MapFrom(src => src.Status.ToString())
-                )
-                .ForMember(
-                    dest => dest.DepartmentName,
-                    opt => opt.MapFrom(src => src.Department.Name)
-                );
+     .ForMember(
+         dest => dest.Status,
+         opt => opt.MapFrom(src => src.Status.ToString())
+     )
+     .ForMember(
+         dest => dest.DepartmentName,
+         opt => opt.MapFrom(src => src.Department.Name)
+     )
+     .ForMember(
+         dest => dest.WorkingDaysFrom,
+         opt => opt.MapFrom(src => src.WorkingDaysFrom.ToString())
+     )
+     .ForMember(
+         dest => dest.WorkingDaysTo,
+         opt => opt.MapFrom(src => src.WorkingDaysTo.ToString())
+     );
 
             CreateMap<UpdateDoctorDto, Doctor>()
           .ForMember(

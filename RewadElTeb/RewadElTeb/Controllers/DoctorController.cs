@@ -123,5 +123,32 @@ namespace RewadElTeb.Controllers
 
             return Ok(result.Message);
         }
+        [HttpGet("working-days")]
+        public async Task<IActionResult> GetAllDays()
+        {
+            var result = await _doctorService.GetAllDaysAsync();
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result.Data);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/working-days")]
+        public async Task<IActionResult> UpdateWorkingDays(
+        int id,
+        [FromBody] UpdateDoctorWorkingDaysDto dto,
+        CancellationToken cancellationToken)
+        {
+            var result = await _doctorService.UpdateWorkingDaysAsync(
+                id,
+                dto,
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result.Message);
+        }
     }
 }

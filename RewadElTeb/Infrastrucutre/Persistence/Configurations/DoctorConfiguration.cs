@@ -45,6 +45,16 @@ namespace Infrastructure.Persistence.Configurations
                 .WithOne(a => a.Doctor)
                 .HasForeignKey(a => a.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(d => d.WorkingDaysFrom)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(20);
+
+            builder.Property(d => d.WorkingDaysTo)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(20);
         }
     }
 }

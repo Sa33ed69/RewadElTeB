@@ -18,7 +18,7 @@ namespace RewadElTeb.Controllers
             _statisticService = statisticService;
         }
         [HttpGet("Get_All_Statistics")]
-        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         { 
             var result = await _statisticService.GetAllAsync(cancellationToken);
@@ -31,7 +31,7 @@ namespace RewadElTeb.Controllers
             return Ok(result.Data); 
         }
         [HttpGet("Get_By_Id_Statistics/{id:int}")]
-        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken) 
         {
             var result = await _statisticService.GetByIdAsync(id, cancellationToken);

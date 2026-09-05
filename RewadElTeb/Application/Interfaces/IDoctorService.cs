@@ -32,5 +32,7 @@ namespace Application.Interfaces
             CancellationToken cancellationToken = default);
         Task<Result<IEnumerable<DoctorStatusDto>>> GetStatusAsync();
         Task<Result> UpdateStatusAsync(int id,DoctorStatus status,CancellationToken cancellationToken = default);
+        Task<Result<IEnumerable<DayOfWeekDto>>> GetAllDaysAsync();
+        Task<Result> UpdateWorkingDaysAsync(int id, UpdateDoctorWorkingDaysDto dto, CancellationToken cancellationToken = default);
     }
 }
