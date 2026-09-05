@@ -11,6 +11,7 @@ namespace Application.DTOs.IdentityDtos
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null;
         public string ConfirmPassword { get; set; } = null!;
+        public string Role { get; set; } = null!;
 
     }
 }

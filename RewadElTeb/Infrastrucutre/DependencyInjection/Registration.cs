@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces;
-using Application.Interfaces.Auth;
 using Application.IRepositories;
 using Application.Mappings;
 using Application.Services;

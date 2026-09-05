@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.IdentityDtos;
-using Application.Interfaces.Auth;
 using Application.ResultPattern;
 using Infrastructure.Persistence.Identity;
 using Infrastructure.Persistence.JwtModule;
@@ -16,16 +15,20 @@ namespace Infrastructure.Persistence.AuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtService _jwtService;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IJwtService jwtService)
+            IJwtService jwtService,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
+            _roleManager = roleManager;
+
         }
 
         public async Task<Result<string>> LoginAsync(
@@ -91,6 +94,13 @@ namespace Infrastructure.Persistence.AuthService
                     "Password and Confirm Password do not match.");
             }
 
+            // Allow only Admin or Manager
+            if (dto.Role != "Admin" && dto.Role != "Manager")
+            {
+                return Result.Failure(
+                    "Invalid role.");
+            }
+
             try
             {
                 var user = new ApplicationUser
@@ -114,7 +124,7 @@ namespace Infrastructure.Persistence.AuthService
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var roleResult = await _userManager
-                    .AddToRoleAsync(user, "Admin");
+                    .AddToRoleAsync(user, dto.Role);
 
                 if (!roleResult.Succeeded)
                 {
@@ -128,13 +138,29 @@ namespace Infrastructure.Persistence.AuthService
                 }
 
                 return Result.Success(
-                    "Admin account created successfully.");
+                    $"{dto.Role} account created successfully.");
             }
             catch (Exception)
             {
                 return Result.Failure(
-                    "Failed to create admin account.");
+                    "Failed to create account.");
             }
         }
+        public async Task<Result<List<RoleDto>>> GetRolesAsync(
+       CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var roles = _roleManager.Roles
+                .Select(r => new RoleDto
+                {
+                    Id = r.Id,
+                    Name = r.Name!
+                })
+                .ToList();
+
+            return Result<List<RoleDto>>.Success(roles);
+        }
+
     }
 }

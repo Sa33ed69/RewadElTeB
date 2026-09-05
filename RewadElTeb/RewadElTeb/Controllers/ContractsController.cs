@@ -51,6 +51,7 @@ namespace API.Controllers
         }
 
         // POST: api/dashboard/contracts
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(
             [FromForm] CreateContractDto dto,
@@ -90,6 +91,7 @@ namespace API.Controllers
         }
 
         // DELETE: api/dashboard/contracts/{id}
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(
             int id,

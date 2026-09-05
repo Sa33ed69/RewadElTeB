@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.IdentityDtos;
-using Application.Interfaces.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +15,7 @@ namespace RewadElTeb.Controllers
             _authService = authService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("login")]
         public async Task<IActionResult> Login(
             LoginDto dto,
@@ -46,6 +46,20 @@ namespace RewadElTeb.Controllers
                 return BadRequest(result.Message);
 
             return Ok(result.Message);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetRoles(
+        CancellationToken cancellationToken)
+        {
+            var result = await _authService.GetRolesAsync(
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
         }
     }
 }

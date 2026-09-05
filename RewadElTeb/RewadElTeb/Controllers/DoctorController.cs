@@ -106,7 +106,7 @@ namespace RewadElTeb.Controllers
             return Ok(result.Data);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateStatus(
             int id,
@@ -133,7 +133,7 @@ namespace RewadElTeb.Controllers
 
             return Ok(result.Data);
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpPut("{id}/working-days")]
         public async Task<IActionResult> UpdateWorkingDays(
         int id,
