@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Configurations
 {
-    public class DeviceConfiguration :IEntityTypeConfiguration<Device>
+    public class ServiceConfiguration :IEntityTypeConfiguration<Service>
     {
-        public void Configure(EntityTypeBuilder<Device> builder)
+        public void Configure(EntityTypeBuilder<Service> builder)
         {
-            builder.ToTable("Devices");
+            builder.ToTable("Services");
 
             builder.HasKey(d => d.Id);
 
@@ -23,11 +23,6 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(d => d.Description)
                 .HasMaxLength(1000);
-
-            builder.Property(d => d.Category)
-                .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(30);
 
             builder.Property(d => d.ImageUrl)
                 .HasMaxLength(500);

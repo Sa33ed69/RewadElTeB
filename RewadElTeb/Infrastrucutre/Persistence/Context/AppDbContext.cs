@@ -16,7 +16,7 @@ namespace Infrastructure.Persistence.Context
         public DbSet<Department> Departments { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Device> Devices { get; set; }
+        public DbSet<Service> Services { get; set; }
         public DbSet<Staff> Staff { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<Statistic> Statistics { get; set; }

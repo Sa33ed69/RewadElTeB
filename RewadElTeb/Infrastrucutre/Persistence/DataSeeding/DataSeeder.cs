@@ -139,34 +139,31 @@ namespace Infrastructure.Persistence.DataSeeding
 
         private static async Task SeedDevicesAsync(AppDbContext context)
         {
-            if (await context.Devices.AnyAsync()) return;
+            if (await context.Services.AnyAsync()) return;
 
-            var devices = new List<Device>
+            var devices = new List<Service>
             {
-                new Device
+                new Service
                 {
                     Name = "جهاز أشعة مقطعية 128 شريحة",
                     Description = "جهاز حديث لتصوير الأعضاء الداخلية بدقة عالية",
-                    Category = DeviceCategory.OutpatientClinics,
                     ImageUrl = null
                 },
-                new Device
+                new Service
                 {
                     Name = "جهاز قسطرة قلبية",
                     Description = "لإجراء القسطرة العلاجية والتشخيصية للقلب",
-                    Category = DeviceCategory.CardiacCatheterization,
                     ImageUrl = null
                 },
-                new Device
+                new Service
                 {
                     Name = "حضانة أطفال حديثي الولادة",
                     Description = "حضانات مجهزة بالكامل للعناية بالأطفال الخدج",
-                    Category = DeviceCategory.NICU,
                     ImageUrl = null
                 }
             };
 
-            context.Devices.AddRange(devices);
+            context.Services.AddRange(devices);
             await context.SaveChangesAsync();
         }
 

@@ -41,7 +41,7 @@ namespace Infrastructure.DependencyInjection
                 cfg.AddProfile<ContractProfile>();
                 cfg.AddProfile<StatisticProfile>();
                 cfg.AddProfile<ContactInfoProfile>();
-
+                cfg.AddProfile<ServiceProfile>();
             });
 
             // Identity
@@ -59,7 +59,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IContractService, ContractService>();
             services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IContactInfoService, ContactInfoService>();
-
+            services.AddScoped<IServiceService, ServiceService>();
             return services;
         }
     }
