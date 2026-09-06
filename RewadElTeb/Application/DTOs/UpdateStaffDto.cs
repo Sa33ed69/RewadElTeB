@@ -16,5 +16,6 @@ namespace Application.DTOs
         public string Description { get; set; } = null!;
 
         public IFormFile? Image { get; set; }
+        public int SortOrder { get; set; }
     }
 }

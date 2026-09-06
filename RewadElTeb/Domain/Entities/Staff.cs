@@ -14,6 +14,7 @@ namespace Domain.Entities
         public string Role { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string? ImageUrl { get; set; }
+        public int SortOrder { get; set; }
 
 
     }

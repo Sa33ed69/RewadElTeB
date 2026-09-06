@@ -183,13 +183,17 @@ namespace Application.Services
 
         // GET ALL
         public async Task<IEnumerable<StaffDto>> GetAllAsync(
-            CancellationToken cancellationToken = default)
+     CancellationToken cancellationToken = default)
         {
             var staff =
                 await _staffRepository.GetAllAsync(
                     cancellationToken);
 
-            return _mapper.Map<IEnumerable<StaffDto>>(staff);
+            var sortedStaff = staff
+                .OrderBy(s => s.SortOrder)
+                .ThenBy(s => s.Id);
+
+            return _mapper.Map<IEnumerable<StaffDto>>(sortedStaff);
         }
 
         // GET BY ID
