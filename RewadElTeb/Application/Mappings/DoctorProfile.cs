@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using AutoMapper;
 using Domain.Entities;
+using System.Text.Json;
 
 namespace Application.Mappings
 {
@@ -23,15 +24,15 @@ namespace Application.Mappings
      .ForMember(
          dest => dest.DepartmentName,
          opt => opt.MapFrom(src => src.Department.Name)
-     )
-     .ForMember(
-         dest => dest.WorkingDaysFrom,
-         opt => opt.MapFrom(src => src.WorkingDaysFrom.ToString())
-     )
-     .ForMember(
-         dest => dest.WorkingDaysTo,
-         opt => opt.MapFrom(src => src.WorkingDaysTo.ToString())
      );
+
+            CreateMap<Doctor, DoctorDto>()
+       .ForMember(
+           dest => dest.WorkingDays,
+           opt => opt.Ignore()
+       );
+
+
 
             CreateMap<UpdateDoctorDto, Doctor>()
           .ForMember(

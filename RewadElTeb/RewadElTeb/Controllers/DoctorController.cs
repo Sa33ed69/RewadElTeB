@@ -150,5 +150,21 @@ namespace RewadElTeb.Controllers
 
             return Ok(result.Message);
         }
+
+        [HttpDelete("{id}/image")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteImage(
+        int id,
+        CancellationToken cancellationToken)
+        {
+            var result = await _doctorService.DeleteImageAsync(
+                id,
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
     }
 }

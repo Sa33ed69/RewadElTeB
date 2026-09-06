@@ -8,7 +8,6 @@ namespace Application.DTOs
 {
     public class UpdateDoctorWorkingDaysDto
     {
-        public DayOfWeek FromDay { get; set; }
-        public DayOfWeek ToDay { get; set; }
+        public List<DayOfWeek> Days { get; set; } = new();
     }
 }

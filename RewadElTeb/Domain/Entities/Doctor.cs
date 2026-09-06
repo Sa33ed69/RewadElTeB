@@ -19,9 +19,8 @@ namespace Domain.Entities
 
         public string? Biography { get; set; }
 
-        public DayOfWeek WorkingDaysFrom { get; set; }
+        public string WorkingDays { get; set; } = "[]";
 
-        public DayOfWeek WorkingDaysTo { get; set; }
         public DoctorStatus Status { get; set; } = DoctorStatus.Active;
 
         public ICollection<Appointment> Appointments { get; set; }

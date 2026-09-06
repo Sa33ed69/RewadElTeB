@@ -34,5 +34,6 @@ namespace Application.Interfaces
         Task<Result> UpdateStatusAsync(int id,DoctorStatus status,CancellationToken cancellationToken = default);
         Task<Result<IEnumerable<DayOfWeekDto>>> GetAllDaysAsync();
         Task<Result> UpdateWorkingDaysAsync(int id, UpdateDoctorWorkingDaysDto dto, CancellationToken cancellationToken = default);
+        Task<Result> DeleteImageAsync(int id,CancellationToken cancellationToken = default);
     }
 }

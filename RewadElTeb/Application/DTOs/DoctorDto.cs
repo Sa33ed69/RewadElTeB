@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Application.DTOs
@@ -16,8 +17,7 @@ namespace Application.DTOs
         public string? Biography { get; set; }
         public string DepartmentName { get; set; } = null!;
         public string Status { get; set; } = null!;
-        public string WorkingDaysFrom { get; set; } = string.Empty;
-        public string WorkingDaysTo { get; set; } = string.Empty;
+        public List<string> WorkingDays { get; set; } = new();
 
     }
 }

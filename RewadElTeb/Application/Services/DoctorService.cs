@@ -5,6 +5,8 @@ using Application.ResultPattern;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -105,7 +107,7 @@ namespace Application.Services
         }
 
         public async Task<IEnumerable<DoctorDto>> GetAllAsync(
-            CancellationToken cancellationToken = default)
+    CancellationToken cancellationToken = default)
         {
             var doctors =
                 await _doctorRepository
@@ -113,12 +115,23 @@ namespace Application.Services
                         d => d.Department,
                         cancellationToken);
 
-            return _mapper.Map<IEnumerable<DoctorDto>>(doctors);
-        }
+            var doctorDtos = _mapper.Map<List<DoctorDto>>(doctors);
 
+            foreach (var dto in doctorDtos)
+            {
+                var doctor = doctors.First(d => d.Id == dto.Id);
+
+                dto.WorkingDays =
+                    JsonSerializer.Deserialize<List<string>>(
+                        doctor.WorkingDays
+                    ) ?? new List<string>();
+            }
+
+            return doctorDtos;
+        }
         public async Task<DoctorDto?> GetByIdAsync(
-            int id,
-            CancellationToken cancellationToken = default)
+    int id,
+    CancellationToken cancellationToken = default)
         {
             var doctor =
                 await _doctorRepository
@@ -130,7 +143,14 @@ namespace Application.Services
             if (doctor == null)
                 return null;
 
-            return _mapper.Map<DoctorDto>(doctor);
+            var doctorDto = _mapper.Map<DoctorDto>(doctor);
+
+            doctorDto.WorkingDays =
+                JsonSerializer.Deserialize<List<string>>(
+                    doctor.WorkingDays
+                ) ?? new List<string>();
+
+            return doctorDto;
         }
 
         public async Task<Result<IEnumerable<DoctorStatusDto>>> GetStatusAsync()
@@ -260,8 +280,7 @@ namespace Application.Services
 
             return Result<IEnumerable<DayOfWeekDto>>.Success(days);
         }
-        public async Task<Result> UpdateWorkingDaysAsync(int id, UpdateDoctorWorkingDaysDto dto, CancellationToken cancellationToken = default)
-
+        public async Task<Result> UpdateWorkingDaysAsync(int id,UpdateDoctorWorkingDaysDto dto,CancellationToken cancellationToken = default)
         {
             var doctor = await _doctorRepository.GetByIdAsync(
                 id,
@@ -273,31 +292,29 @@ namespace Application.Services
                     $"Doctor with ID {id} does not exist.");
             }
 
-            // Validate FromDay
-            if (!Enum.IsDefined(dto.FromDay))
+            // Validate working days
+            if (dto.Days == null || !dto.Days.Any())
             {
                 return Result.Failure(
-                    $"Invalid start working day: {dto.FromDay}.");
+                    "At least one working day must be selected.");
             }
 
-            // Validate ToDay
-            if (!Enum.IsDefined(dto.ToDay))
+            if (dto.Days.Any(day => (int)day < 0 || (int)day > 6))
             {
                 return Result.Failure(
-                    $"Invalid end working day: {dto.ToDay}.");
-            }
-
-            // FromDay must be before ToDay
-            if (dto.FromDay >= dto.ToDay)
-            {
-                return Result.Failure(
-                    "The start working day must be before the end working day.");
+                    "Working days must be between 0 and 6.");
             }
 
             try
             {
-                doctor.WorkingDaysFrom = dto.FromDay;
-                doctor.WorkingDaysTo = dto.ToDay;
+                var options = new JsonSerializerOptions();
+
+                options.Converters.Add(
+                    new JsonStringEnumConverter());
+
+                doctor.WorkingDays = JsonSerializer.Serialize(
+                    dto.Days,
+                    options);
 
                 await _doctorRepository.UpdateAsync(
                     doctor,
@@ -310,6 +327,50 @@ namespace Application.Services
             {
                 return Result.Failure(
                     "Failed to update doctor working days.");
+            }
+        }
+
+        public async Task<Result> DeleteImageAsync(
+      int id,
+      CancellationToken cancellationToken = default)
+        {
+            var doctor = await _doctorRepository.GetByIdAsync(
+                id,
+                cancellationToken);
+
+            if (doctor == null)
+            {
+                return Result.Failure(
+                    $"Doctor with ID {id} does not exist.");
+            }
+
+            if (string.IsNullOrEmpty(doctor.ImageUrl))
+            {
+                return Result.Failure(
+                    "Doctor does not have an image.");
+            }
+
+            try
+            {
+                // Delete image from wwwroot
+                await _imageService.DeleteImageAsync(
+                    doctor.ImageUrl,
+                    "doctors");
+
+                // Remove image path from database
+                doctor.ImageUrl = null;
+
+                await _doctorRepository.UpdateAsync(
+                    doctor,
+                    cancellationToken);
+
+                return Result.Success(
+                    "Doctor image deleted successfully.");
+            }
+            catch (Exception)
+            {
+                return Result.Failure(
+                    "Failed to delete doctor image.");
             }
         }
     }

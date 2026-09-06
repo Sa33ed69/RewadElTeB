@@ -15,7 +15,7 @@ namespace RewadElTeb.Controllers
             _authService = authService;
         }
 
-        [Authorize(Roles = "Admin")]
+        
         [HttpPost("login")]
         public async Task<IActionResult> Login(
             LoginDto dto,
