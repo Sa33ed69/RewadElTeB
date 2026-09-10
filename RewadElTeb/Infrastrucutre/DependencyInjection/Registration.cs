@@ -42,6 +42,7 @@ namespace Infrastructure.DependencyInjection
                 cfg.AddProfile<StatisticProfile>();
                 cfg.AddProfile<ContactInfoProfile>();
                 cfg.AddProfile<ServiceProfile>();
+                cfg.AddProfile<PatientFeedbackProfile>();
             });
 
             // Identity
@@ -60,6 +61,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IContactInfoService, ContactInfoService>();
             services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<IPatientFeedbackService, PatientFeedbackService>();
             return services;
         }
     }
