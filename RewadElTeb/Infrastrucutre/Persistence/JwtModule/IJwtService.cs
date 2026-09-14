@@ -9,6 +9,7 @@ namespace Infrastructure.Persistence.JwtModule
 {
     public interface IJwtService
     {
-        Task<string> GenerateTokenAsync(string userId,string email,IEnumerable<string> roles);
+        Task<string> GenerateTokenAsync(string userId,string email,string fullName,IEnumerable<string> roles);
+
     }
 }

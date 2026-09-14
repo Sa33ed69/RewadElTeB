@@ -22,6 +22,7 @@ namespace Infrastructure.Persistence.Context
         public DbSet<Statistic> Statistics { get; set; }
         public DbSet<ContactInfo> ContactInfo { get; set; }
         public DbSet<PatientFeedback> PatientFeedbacks { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
             

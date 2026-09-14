@@ -68,6 +68,7 @@ namespace Infrastructure.Persistence.AuthService
             var token = await _jwtService.GenerateTokenAsync(
                 user.Id,
                 user.Email!,
+                   user.FullName,
                 roles);
 
             return Result<string>.Success(token);

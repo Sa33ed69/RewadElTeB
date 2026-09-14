@@ -18,11 +18,11 @@ namespace Infrastructure.Persistence.JwtModule
         {
             _configuration = configuration;
         }
-
         public Task<string> GenerateTokenAsync(
-            string userId,
-            string email,
-            IEnumerable<string> roles)
+             string userId,
+             string email,
+             string fullName,
+             IEnumerable<string> roles)
         {
             var claims = new List<Claim>
             {
@@ -32,7 +32,11 @@ namespace Infrastructure.Persistence.JwtModule
 
                 new Claim(
                     ClaimTypes.Email,
-                    email)
+                    email),
+
+                new Claim(
+                    ClaimTypes.Name,
+                    fullName)
             };
 
             foreach (var role in roles)
@@ -47,10 +51,9 @@ namespace Infrastructure.Persistence.JwtModule
                 Encoding.UTF8.GetBytes(
                     _configuration["Jwt:Key"]!));
 
-            var credentials =
-                new SigningCredentials(
-                    key,
-                    SecurityAlgorithms.HmacSha256);
+            var credentials = new SigningCredentials(
+                key,
+                SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
