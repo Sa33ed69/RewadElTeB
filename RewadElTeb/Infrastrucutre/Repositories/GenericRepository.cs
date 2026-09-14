@@ -13,7 +13,7 @@ namespace Infrastructure.Repositories
         public GenericRepository(AppDbContext context)
         {
             _context = context;
-            _dbSet = context.Set<T>();
+            _dbSet = context.Set<T>();  
         }
 
         public async Task<T?> GetByIdAsync(

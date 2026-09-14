@@ -13,9 +13,13 @@ namespace Application.Mappings
     {
         public ServiceProfile()
         {
-            CreateMap<CreateServiceDto, Service>();
+            CreateMap<CreateServiceDto, Service>()
+                .ForMember(dest => dest.ImageUrl,
+                    opt => opt.Ignore());
 
-            CreateMap<UpdateServiceDto, Service>();
+            CreateMap<UpdateServiceDto, Service>()
+                .ForMember(dest => dest.ImageUrl,
+                    opt => opt.Ignore());
 
             CreateMap<Service, ServiceDto>();
         }

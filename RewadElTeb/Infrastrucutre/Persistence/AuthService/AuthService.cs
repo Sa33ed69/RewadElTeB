@@ -106,7 +106,9 @@ namespace Infrastructure.Persistence.AuthService
                 var user = new ApplicationUser
                 {
                     UserName = dto.Email,
-                    Email = dto.Email
+                    Email = dto.Email,
+                    FullName = dto.FullName,
+                    
                 };
 
                 var createResult = await _userManager
