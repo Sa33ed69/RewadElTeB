@@ -51,7 +51,7 @@ namespace RewadElTeb.Controllers
         }
 
         // DELETE: api/dashboard/doctors/{id}
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(
             int id,

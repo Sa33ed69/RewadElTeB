@@ -68,6 +68,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<AuditLogInterceptor>();
             services.AddScoped<IAuditLogService, AuditLogService>();
+            services.AddHostedService<AuditLogCleanupService>();
 
             //DbContext
 
