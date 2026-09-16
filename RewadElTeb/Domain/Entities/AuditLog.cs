@@ -17,7 +17,7 @@ namespace Domain.Entities
         public string Action { get; set; } = null!;
         public string EntityName { get; set; } = null!;
         public string? EntityId { get; set; }
-
+        public string? EntityDisplayName { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace Application.DTOs.IdentityDtos
         public string UserEmail { get; set; } = null!;
         public string Action { get; set; } = null!;
         public string EntityName { get; set; } = null!;
+        public string? EntityDisplayName { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
