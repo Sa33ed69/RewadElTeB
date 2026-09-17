@@ -31,8 +31,9 @@ namespace Application.Services
             CancellationToken cancellationToken)
         {
             var doctor = await _doctorRepository.GetByIdAsync(
-                doctorId,
-                cancellationToken);
+                 doctorId,
+                 x => x.Department,
+                 cancellationToken);
 
             if (doctor == null)
             {
@@ -66,8 +67,8 @@ namespace Application.Services
             var appointment = _mapper.Map<Appointment>(dto);
 
                 appointment.DoctorId = doctorId;
+                appointment.Doctor = doctor;
                 appointment.AppointmentDate = dto.AppointmentDate.Date;
-                appointment.Status = AppointmentStatus.Pending;
                 appointment.CreatedAt = DateTime.UtcNow;
 
             await _appointmentRepository.AddAsync(
@@ -83,9 +84,9 @@ namespace Application.Services
             CancellationToken cancellationToken)
         {
             var appointments =
-                await _appointmentRepository.GetAllWithIncludesAsync(
-                    x => x.Doctor,
-                    cancellationToken);
+             await _appointmentRepository.GetAllWithIncludesAsync(
+                 x => x.Doctor.Department,
+                 cancellationToken);
 
             var result = _mapper.Map<List<AppointmentDto>>(appointments);
 
@@ -97,10 +98,10 @@ namespace Application.Services
             CancellationToken cancellationToken)
         {
             var appointment =
-                await _appointmentRepository.GetByIdAsync(
-                    id,
-                    x => x.Doctor,
-                    cancellationToken);
+             await _appointmentRepository.GetByIdAsync(
+                 id,
+                 x => x.Doctor.Department,
+                 cancellationToken);
 
             if (appointment == null)
             {
@@ -136,58 +137,6 @@ namespace Application.Services
                 "Appointment deleted successfully.");
         }
 
-        public async Task<Result<List<AvailableAppointmentDayDto>>> GetAvailableDaysAsync(
-    int doctorId,
-    CancellationToken cancellationToken)
-        {
-            var doctor = await _doctorRepository.GetByIdAsync(
-                doctorId,
-                cancellationToken);
-
-            if (doctor == null)
-            {
-                return Result<List<AvailableAppointmentDayDto>>.Failure(
-                    "Doctor not found.");
-            }
-
-            if (doctor.Status != DoctorStatus.Active)
-            {
-                return Result<List<AvailableAppointmentDayDto>>.Failure(
-                    "Doctor is not active.");
-            }
-
-            var workingDays = JsonSerializer.Deserialize<List<string>>(
-                doctor.WorkingDays) ?? new List<string>();
-
-            var today = DateTime.Today;
-
-            // Current week starts on Monday
-            int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
-
-            var weekStart = today.AddDays(-diff).Date;
-            var weekEnd = weekStart.AddDays(6).Date;
-
-            var result = new List<AvailableAppointmentDayDto>();
-
-            for (var date = weekStart; date <= weekEnd; date = date.AddDays(1))
-            {
-                // Don't show past dates
-                if (date < today)
-                    continue;
-
-                var dayName = date.DayOfWeek.ToString();
-
-                if (workingDays.Contains(dayName))
-                {
-                    result.Add(new AvailableAppointmentDayDto
-                    {
-                        Date = date,
-                        Day = dayName
-                    });
-                }
-            }
-
-            return Result<List<AvailableAppointmentDayDto>>.Success(result);
-        }
+       
     }
 }

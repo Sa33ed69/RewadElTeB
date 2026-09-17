@@ -13,11 +13,16 @@ namespace Application.Mappings
     {
         public AppointmentProfile()
         {
-            CreateMap<Appointment, AppointmentDto>()
-               .ForMember(
-                   dest => dest.DoctorName,
-                   opt => opt.MapFrom(src => src.Doctor.FullName)
-               );
+            
+             CreateMap<Appointment, AppointmentDto>()
+    .ForMember(
+        dest => dest.DoctorName,
+        opt => opt.MapFrom(src => src.Doctor.FullName)
+    )
+    .ForMember(
+        dest => dest.DepartmentName,
+        opt => opt.MapFrom(src => src.Doctor.Department.Name)
+    );
 
             CreateMap<CreateAppointmentDto, Appointment>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())

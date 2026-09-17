@@ -14,9 +14,7 @@ namespace Application.Interfaces
             int doctorId,
             CreateAppointmentDto dto,
             CancellationToken cancellationToken);
-        Task<Result<List<AvailableAppointmentDayDto>>> GetAvailableDaysAsync(
-    int doctorId,
-    CancellationToken cancellationToken);
+ 
 
         Task<Result<List<AppointmentDto>>> GetAllAsync(
             CancellationToken cancellationToken);

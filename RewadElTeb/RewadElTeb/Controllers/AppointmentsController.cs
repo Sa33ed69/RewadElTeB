@@ -64,20 +64,7 @@ namespace RewadElTeb.Controllers
 
             return Ok(result);
         }
-        [HttpGet("doctor/{doctorId}/available-days")]
-        public async Task<IActionResult> GetAvailableDays(
-    int doctorId,
-    CancellationToken cancellationToken)
-        {
-            var result = await _appointmentService.GetAvailableDaysAsync(
-                doctorId,
-                cancellationToken);
-
-            if (!result.IsSuccess)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
+       
         // DELETE: api/dashboard/appointments/{id}
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
