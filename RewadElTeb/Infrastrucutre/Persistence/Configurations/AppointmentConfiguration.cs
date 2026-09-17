@@ -32,6 +32,10 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(a => a.CreatedAt)
                 .IsRequired();
 
+            builder.Property(a => a.AppointmentDate)
+                .IsRequired()
+                .HasColumnType("date");
+
             builder.HasOne(a => a.Doctor)
                 .WithMany(d => d.Appointments)
                 .HasForeignKey(a => a.DoctorId)

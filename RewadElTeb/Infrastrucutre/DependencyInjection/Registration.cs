@@ -43,6 +43,7 @@ namespace Infrastructure.DependencyInjection
                 cfg.AddProfile<ServiceProfile>();
                 cfg.AddProfile<PatientFeedbackProfile>();
                 cfg.AddProfile<AuditLogProfile>();
+                cfg.AddProfile<AppointmentProfile>();
             });
 
             // Identity
@@ -69,6 +70,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<AuditLogInterceptor>();
             services.AddScoped<IAuditLogService, AuditLogService>();
             services.AddHostedService<AuditLogCleanupService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
 
             //DbContext
 
