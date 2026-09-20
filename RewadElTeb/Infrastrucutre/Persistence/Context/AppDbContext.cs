@@ -23,6 +23,7 @@ namespace Infrastructure.Persistence.Context
         public DbSet<ContactInfo> ContactInfo { get; set; }
         public DbSet<PatientFeedback> PatientFeedbacks { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<HomeAppointment> HomeAppointments { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
             

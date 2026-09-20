@@ -20,7 +20,7 @@ namespace Infrastructure.Persistence.AuthService
             _scopeFactory = scopeFactory;
         }
         protected override async Task ExecuteAsync(
-            CancellationToken stoppingToken)
+    CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -31,18 +31,25 @@ namespace Infrastructure.Persistence.AuthService
                     var dbContext = scope.ServiceProvider
                         .GetRequiredService<AppDbContext>();
 
-                    var cutoffDate = DateTime.UtcNow.AddDays(-30);
+                    var now = DateTime.UtcNow;
 
+                    var startOfCurrentMonth = new DateTime(
+                        now.Year,
+                        now.Month,
+                        1,
+                        0, 0, 0,
+                        DateTimeKind.Utc);
+
+                    // حذف كل الـ Audit Logs من الشهور السابقة
                     var oldLogs = await dbContext.AuditLogs
-                        .Where(x => x.CreatedAt < cutoffDate)
+                        .Where(x => x.CreatedAt < startOfCurrentMonth)
                         .ToListAsync(stoppingToken);
 
                     if (oldLogs.Any())
                     {
                         dbContext.AuditLogs.RemoveRange(oldLogs);
 
-                        await dbContext.SaveChangesAsync(
-                            stoppingToken);
+                        await dbContext.SaveChangesAsync(stoppingToken);
                     }
                 }
                 catch (Exception)
@@ -50,7 +57,7 @@ namespace Infrastructure.Persistence.AuthService
                     // ممكن نضيف Logging هنا بعدين
                 }
 
-                // تشغيل الفحص مرة كل 24 ساعة
+                // فحص مرة كل 24 ساعة
                 await Task.Delay(
                     TimeSpan.FromDays(1),
                     stoppingToken);

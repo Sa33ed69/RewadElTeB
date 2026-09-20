@@ -3,6 +3,8 @@ using Application.Interfaces.Auth;
 using Application.IRepositories;
 using Application.Mappings;
 using Application.Services;
+using Domain.Entities;
+using Infrastructure.ExternalServices;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.AuthService;
 using Infrastructure.Persistence.Context;
@@ -10,6 +12,7 @@ using Infrastructure.Persistence.Identity;
 using Infrastructure.Persistence.Interceptors;
 using Infrastructure.Persistence.JwtModule;
 using Infrastructure.Repositories;
+using Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -44,6 +47,7 @@ namespace Infrastructure.DependencyInjection
                 cfg.AddProfile<PatientFeedbackProfile>();
                 cfg.AddProfile<AuditLogProfile>();
                 cfg.AddProfile<AppointmentProfile>();
+                cfg.AddProfile<HomeAppointmentProfile>();
             });
 
             // Identity
@@ -71,6 +75,9 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IAuditLogService, AuditLogService>();
             services.AddHostedService<AuditLogCleanupService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
+            services.Configure<WhatsAppSettings>(configuration.GetSection("WhatsApp"));
+            services.AddHttpClient<IWhatsAppService, WhatsAppService>();
+            services.AddScoped<IHomeAppointmentService, HomeAppointmentService>();
 
             //DbContext
 

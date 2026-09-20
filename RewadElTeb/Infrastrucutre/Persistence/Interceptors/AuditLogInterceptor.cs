@@ -117,9 +117,31 @@ namespace Infrastructure.Persistence.Interceptors
         }
 
         private string? GetEntityDisplayName(
-            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry,
-            DbContext context)
+    Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry,
+    DbContext context)
         {
+            // Statistic
+            var keyProperty = entry.Properties
+                .FirstOrDefault(p =>
+                    p.Metadata.Name == "Key");
+
+            var valueProperty = entry.Properties
+                .FirstOrDefault(p =>
+                    p.Metadata.Name == "Value");
+
+            if (keyProperty != null && valueProperty != null)
+            {
+                var key = entry.State == EntityState.Deleted
+                    ? keyProperty.OriginalValue?.ToString()
+                    : keyProperty.CurrentValue?.ToString();
+
+                var value = entry.State == EntityState.Deleted
+                    ? valueProperty.OriginalValue?.ToString()
+                    : valueProperty.CurrentValue?.ToString();
+
+                return $"{key}: {value}";
+            }
+
             // Create / Update
             if (entry.State != EntityState.Deleted)
             {
@@ -139,6 +161,16 @@ namespace Infrastructure.Persistence.Interceptors
                 if (nameProperty?.CurrentValue != null)
                 {
                     return nameProperty.CurrentValue.ToString();
+                }
+
+                // Home Appointment
+                var patientNameProperty = entry.Properties
+                    .FirstOrDefault(p =>
+                        p.Metadata.Name == "PatientName");
+
+                if (patientNameProperty?.CurrentValue != null)
+                {
+                    return patientNameProperty.CurrentValue.ToString();
                 }
             }
 
@@ -161,6 +193,18 @@ namespace Infrastructure.Persistence.Interceptors
             if (originalNameProperty?.OriginalValue != null)
             {
                 return originalNameProperty
+                    .OriginalValue
+                    .ToString();
+            }
+
+            // Home Appointment Delete
+            var originalPatientNameProperty = entry.Properties
+                .FirstOrDefault(p =>
+                    p.Metadata.Name == "PatientName");
+
+            if (originalPatientNameProperty?.OriginalValue != null)
+            {
+                return originalPatientNameProperty
                     .OriginalValue
                     .ToString();
             }
