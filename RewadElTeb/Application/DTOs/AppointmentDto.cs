@@ -14,6 +14,7 @@ namespace Application.DTOs
         public DateTime AppointmentDate { get; set; }
         public string DoctorName { get; set; } = null!;
         public string DepartmentName { get; set; } = null!;
+        public string Type { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
     }
 }

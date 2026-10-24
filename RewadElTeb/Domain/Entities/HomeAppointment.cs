@@ -15,7 +15,6 @@ namespace Domain.Entities
         public HomeServiceType ServiceType { get; set; }
 
         public string CaseDescription { get; set; } = null!;
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -5,6 +5,7 @@ using Application.ResultPattern;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace Application.Services
@@ -14,15 +15,22 @@ namespace Application.Services
         private readonly IGenericRepository<Appointment> _appointmentRepository;
         private readonly IGenericRepository<Doctor> _doctorRepository;
         private readonly IMapper _mapper;
+        private readonly IWhatsAppService _whatsAppService;
+        private readonly ILogger<AppointmentService> _logger;
 
         public AppointmentService(
             IGenericRepository<Appointment> appointmentRepository,
             IGenericRepository<Doctor> doctorRepository,
-            IMapper mapper)
+            IMapper mapper, 
+            IWhatsAppService whatsAppService,
+            ILogger<AppointmentService> logger
+            )
         {
             _appointmentRepository = appointmentRepository;
             _doctorRepository = doctorRepository;
             _mapper = mapper;
+            _whatsAppService = whatsAppService;
+            _logger = logger; 
         }
 
         public async Task<Result<AppointmentDto>> CreateAsync(
@@ -74,6 +82,20 @@ namespace Application.Services
             await _appointmentRepository.AddAsync(
                 appointment,
                 cancellationToken);
+
+            var whatsappResult =
+                await _whatsAppService.SendAppointmentConfirmationAsync(
+                    dto.PatientPhone,
+                    cancellationToken);
+
+            if (!whatsappResult.IsSuccess)
+            {
+                _logger.LogWarning(
+                    "Appointment {AppointmentId} was created successfully, " +
+                    "but WhatsApp confirmation failed for phone {Phone}.",
+                    appointment.Id,
+                    dto.PatientPhone);
+            }
 
             var result = _mapper.Map<AppointmentDto>(appointment);
 

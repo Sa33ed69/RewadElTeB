@@ -5,6 +5,7 @@ using Application.ResultPattern;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,18 @@ namespace Application.Services
     {
         private readonly IGenericRepository<HomeAppointment> _repository;
         private readonly IMapper _mapper;
-
+        private readonly IWhatsAppService _whatsAppService;
+        private readonly ILogger<HomeAppointmentService> _logger;
         public HomeAppointmentService(
             IGenericRepository<HomeAppointment> repository,
-            IMapper mapper)
+            IMapper mapper,
+            IWhatsAppService whatsAppService,
+            ILogger<HomeAppointmentService> logger)
         {
             _repository = repository;
             _mapper = mapper;
+            _whatsAppService = whatsAppService;
+            _logger = logger;
         }
         public async Task<Result> CreateAsync(
      CreateHomeAppointmentDto dto,
@@ -66,6 +72,17 @@ namespace Application.Services
             await _repository.AddAsync(
                 homeAppointment,
                 cancellationToken);
+
+            var whatsappResult =
+                await _whatsAppService.SendAppointmentConfirmationAsync(
+                    dto.PatientPhone,
+                    cancellationToken);
+
+            if (!whatsappResult.IsSuccess)
+            {
+                _logger.LogWarning("Appointment {AppointmentId} was created successfully," +
+                    " " + "but WhatsApp confirmation failed for phone {Phone}.",
+                    homeAppointment.Id, dto.PatientPhone); }
 
             return Result.Success(
                 "Home appointment created successfully.");

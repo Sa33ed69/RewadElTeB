@@ -10,6 +10,7 @@ namespace Application.DTOs
     {
         public string PatientName { get; set; } = null!;
         public string PatientPhone { get; set; } = null!;
+        public string Type { get; set; } = null!;
         public DateTime AppointmentDate { get; set; }
     }
 }

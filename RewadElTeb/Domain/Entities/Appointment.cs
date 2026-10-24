@@ -16,6 +16,7 @@ namespace Domain.Entities
         public DateTime AppointmentDate { get; set; }
         public int DoctorId { get; set; }
         public Doctor Doctor { get; set; } = null!;
+        public string Type { get; set; } = null!;
         public AppointmentStatus Status { get; set; } = AppointmentStatus.Pending;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;   
 

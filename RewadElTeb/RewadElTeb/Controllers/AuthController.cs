@@ -61,5 +61,35 @@ namespace RewadElTeb.Controllers
 
             return Ok(result);
         }
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("users/{userId}")]
+        public async Task<IActionResult> DeleteManager(
+        string userId,
+        CancellationToken cancellationToken)
+        {
+            var result = await _authService.DeleteManagerAsync(
+                userId,
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result.Message);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers(
+            CancellationToken cancellationToken)
+        {
+            var result = await _authService.GetUsersAsync(
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result);
+        }
+
     }
 }

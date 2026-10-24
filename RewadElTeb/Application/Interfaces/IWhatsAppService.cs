@@ -9,9 +9,6 @@ namespace Application.Interfaces
 {
     public interface IWhatsAppService
     {
-        Task<Result> SendAppointmentConfirmationAsync(
-                string patientPhone,
-                string patientName,
-                CancellationToken cancellationToken);
+        Task<Result> SendAppointmentConfirmationAsync(string patientPhone, CancellationToken cancellationToken);
     }
 }

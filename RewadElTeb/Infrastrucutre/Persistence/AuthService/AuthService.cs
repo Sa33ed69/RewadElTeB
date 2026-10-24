@@ -1,8 +1,10 @@
-﻿using Application.DTOs.IdentityDtos;
+﻿using Application.DTOs;
+using Application.DTOs.IdentityDtos;
 using Application.ResultPattern;
 using Infrastructure.Persistence.Identity;
 using Infrastructure.Persistence.JwtModule;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -163,6 +165,74 @@ namespace Infrastructure.Persistence.AuthService
                 .ToList();
 
             return Result<List<RoleDto>>.Success(roles);
+        }
+
+        public async Task<Result> DeleteManagerAsync(
+            string userId,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return Result.Failure("User not found.");
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (!roles.Contains("Manager") && !roles.Contains("Admin"))
+            {
+                return Result.Failure(
+                    "Only Admin or Manager accounts can be deleted.");
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(
+                    ", ",
+                    result.Errors.Select(e => e.Description));
+
+                return Result.Failure(errors);
+            }
+
+            return Result.Success(
+                "Account deleted successfully.");
+        }
+
+        public async Task<Result<List<UserDto>>> GetUsersAsync(
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var users = await _userManager.Users
+                .ToListAsync(cancellationToken);
+
+            var usersDto = new List<UserDto>();
+
+            foreach (var user in users)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var roles = await _userManager.GetRolesAsync(user);
+
+                usersDto.Add(new UserDto
+                {
+                    Id = user.Id,
+                    FullName = user.FullName,
+                    Email = user.Email ?? "",
+                    Role = string.Join(", ", roles)
+                });
+            }
+
+            return Result<List<UserDto>>.Success(usersDto);
         }
 
     }

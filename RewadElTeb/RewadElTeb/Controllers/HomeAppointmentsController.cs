@@ -44,7 +44,7 @@ namespace RewadElTeb.Controllers
 
         // GET: api/HomeAppointments
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> GetAll(
             CancellationToken cancellationToken)
         {
@@ -56,7 +56,7 @@ namespace RewadElTeb.Controllers
 
         // GET: api/HomeAppointments/{id}
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> GetById(
             int id,
             CancellationToken cancellationToken)
